@@ -25,7 +25,7 @@ class CRF_BiLSTM(nn.Module):
                 self.transitions=nn.Parameter(torch.randn(self.n_tokens,self.n_tokens))
                 nn.init.xavier_uniform_(self.transitions.data)
                 
-                self.lstm=nn.LSTM(h_size,h_size,num_layers=1,bidirectional=True,batch_first=True,dropout=0.2)
+                self.lstm=nn.LSTM(h_size,h_size,num_layers=4,bidirectional=True,batch_first=True,dropout=0.2)
                 
                 for name,weight in self.lstm.named_parameters():
                         if 'weight' in name:

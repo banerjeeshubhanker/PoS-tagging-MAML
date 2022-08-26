@@ -10,8 +10,8 @@ from data_loader import Data_Loader
 
                         
 class MetaLearn(object):
-        def __init__(self,hindi_data_loader,marathi_data_loader,sanskrit_data_loader,bhojpuri_data_loader
-                     ,magahi_data_loader,english_data_loader,german_data_loader,dutch_data_loader,danish_data_loader
+        def __init__(self,lithuanian_data_loader,manx_data_loader,latvian_data_loader,irish_data_loader
+                     ,serbian_data_loader,czech_data_loader,slovak_data_loader,slovenian_data_loader,scottish_gaelic_data_loader
                      ,lossFunction,hidden_size,epochs,inner_epoch,max_len,n_tokens,tokens_dict,dict_token,char_dict,n_chars,N,K,lr):
                 
                 self.fast_net=CRF_BiLSTM(inner_epoch,hidden_size,n_tokens,tokens_dict,char_dict,n_chars) #.cuda()
@@ -31,15 +31,15 @@ class MetaLearn(object):
                 self.token_to_index=tokens_dict
                 self.index_to_token=dict_token
 
-                self.marathi_data_loader=marathi_data_loader
-                self.hindi_data_loader=hindi_data_loader
-                self.magahi_data_loader=magahi_data_loader
-                self.sanskrit_data_loader=sanskrit_data_loader
-                self.bhojpuri_data_loader=bhojpuri_data_loader
-                self.german_data_loader=german_data_loader
-                self.english_data_loader=english_data_loader
-                self.danish_data_loader=danish_data_loader
-                self.dutch_data_loader=dutch_data_loader
+                self.manx_data_loader=manx_data_loader
+                self.lithuanian_data_loader=lithuanian_data_loader
+                self.serbian_data_loader=serbian_data_loader
+                self.latvian_data_loader=latvian_data_loader
+                self.irish_data_loader=irish_data_loader
+                self.slovak_data_loader=slovak_data_loader
+                self.czech_data_loader=czech_data_loader
+                self.scottish_gaelic_data_loader=scottish_gaelic_data_loader
+                self.slovenian_data_loader=slovenian_data_loader
 
                 self.N=N
                 self.K=K
@@ -80,11 +80,11 @@ class MetaLearn(object):
         def train(self):
                 prev_accuracy=0
                 if self.N==2:
-                        l=[self.marathi_data_loader,self.hindi_data_loader,self.magahi_data_loader,self.sanskrit_data_loader,
-                          self.english_data_loader,self.german_data_loader,self.danish_data_loader]
+                        l=[self.manx_data_loader,self.lithuanian_data_loader,self.serbian_data_loader,self.latvian_data_loader,
+                          self.czech_data_loader,self.slovak_data_loader,self.scottish_gaelic_data_loader]
                 else:
-                        l=[self.hindi_data_loader,self.magahi_data_loader,self.sanskrit_data_loader,
-                          self.english_data_loader,self.german_data_loader]
+                        l=[self.lithuanian_data_loader,self.serbian_data_loader,self.latvian_data_loader,
+                          self.czech_data_loader,self.slovak_data_loader]
                 add=1
                 for epoch in range(self.epochs):
                         
@@ -137,11 +137,11 @@ class MetaLearn(object):
                 meta_optimizer=optim.SGD(self.encoder.parameters(),lr=self.lr)
                 prev_accuracy=0
                 if self.N==2:
-                        l=[self.marathi_data_loader,self.hindi_data_loader,self.magahi_data_loader,self.sanskrit_data_loader,
-                          self.english_data_loader,self.german_data_loader,self.danish_data_loader]
+                        l=[self.manx_data_loader,self.lithuanian_data_loader,self.serbian_data_loader,self.latvian_data_loader,
+                          self.czech_data_loader,self.slovak_data_loader,self.scottish_gaelic_data_loader]
                 else:
-                        l=[self.hindi_data_loader,self.magahi_data_loader,self.sanskrit_data_loader,
-                          self.english_data_loader,self.german_data_loader]
+                        l=[self.lithuanian_data_loader,self.serbian_data_loader,self.latvian_data_loader,
+                          self.czech_data_loader,self.slovak_data_loader]
                 add=1
 
                 for epoch in range(self.epochs):
@@ -273,6 +273,8 @@ class MetaLearn(object):
         def test(self,t=2,num=40):
                 accuracy_final1=0
                 accuracy_final2=0
+                res_original = {}
+                res_pred = {}
 
                 for _ in range(num):
                         fast_weights=OrderedDict((name,param) for (name,param) in self.encoder.named_parameters())
@@ -280,9 +282,9 @@ class MetaLearn(object):
                         train_optimizer=optim.Adam(self.fast_net.parameters(),lr=self.lr)
                         
                         if self.N==2:
-                                loaders=[self.bhojpuri_data_loader,self.dutch_data_loader]
+                                loaders=[self.irish_data_loader,self.slovenian_data_loader]
                         else:
-                                loaders=[self.bhojpuri_data_loader,self.dutch_data_loader,self.danish_data_loader,self.marathi_data_loader]
+                                loaders=[self.irish_data_loader,self.slovenian_data_loader,self.scottish_gaelic_data_loader,self.manx_data_loader]
                         random.shuffle(loaders)
                         data_loader=Data_Loader(loaders,self.N,K=self.K,examples=2)
 
@@ -303,8 +305,18 @@ class MetaLearn(object):
                                 
                                 j,count=0,0
                                 for i in range(len(sentence1)):
+                                        print(outputprime[j])
                                         c+=1
+                                        if y_test[j] not in res_original:
+                                                res_original[y_test[j]] = 1
+                                        else:
+                                                res_original[y_test[j]] += 1
+
                                         if outputprime[j]==y_test[j]:
+                                                if y_test[j] not in res_original:
+                                                        res_pred[y_test[j]] = 1
+                                                else:
+                                                        res_pred[y_test[j]] += 1
                                                 count+=1
                                                 b+=1
                                         j+=1
@@ -314,6 +326,10 @@ class MetaLearn(object):
                                 
                         accuracy_final1+=a/t
                         accuracy_final2+=b*100/c
+                with open("results.pkl", "wb") as f:
+                        res_original = {"res_original":res_original}
+                        res_pred = {"res_pred":res_pred}
+                        pkl.dump([res_original,res_pred], f)
                 print('validation accuracy over sentences=',accuracy_final1/num,'validation accuracy over tags=',accuracy_final2/num)
 
                 return accuracy_final1/num,accuracy_final2/num

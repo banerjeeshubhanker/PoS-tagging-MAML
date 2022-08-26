@@ -4,31 +4,31 @@ import torch
 from functions import preprocess_2
 
 def load_sentences():
-        hindi_train=os.getcwd()+'/hi_hdtb-ud-train.conllu'
-        marathi_train=os.getcwd()+'/mr_ufal-ud-train.conllu'
-        marathi_test=os.getcwd()+'/mr_ufal-ud-test.conllu'
-        marathi_dev=os.getcwd()+'/mr_ufal-ud-dev.conllu'
-        bhojpuri_train=os.getcwd()+'/bho_bhtb-ud-test.conllu'
-        magahi_train=os.getcwd()+'/mag_mgtb-ud-test.conllu'
-        sanskrit_train=os.getcwd()+'/sa_ufal-ud-test.conllu'
-        english_train=os.getcwd()+'/en_gum-ud-dev.conllu'
-        german_train=os.getcwd()+'/de_hdt-ud-dev.conllu'
-        dutch_train=os.getcwd()+'/nl_lassysmall-ud-test.conllu'
-        danish_train=os.getcwd()+'/da_ddt-ud-test.conllu'
+        manx_train=os.getcwd()+'/Data/gv_cadhan-ud-train.conllu'
+        manx_test=os.getcwd()+'/Data/gv_cadhan-ud-test.conllu'
+        manx_dev=os.getcwd()+'/Data/gv_cadhan-ud-dev.conllu'
+        irish_train=os.getcwd()+'/Data/ga_idt-ud-train.conllu'
+        scottish_gaelic_train=os.getcwd()+'/Data/gd_arcosg-ud-train.conllu'
+        serbian_train=os.getcwd()+'/Data/sr_set-ud-train.conllu'
+        slovak_train=os.getcwd()+'/Data/sk_snk-ud-train.conllu'
+        slovenian_train=os.getcwd()+'/Data/sl_ssj-ud-train.conllu'
+        lithuanian_train=os.getcwd()+'/Data/lt_alksnis-ud-train.conllu'
+        latvian_train=os.getcwd()+'/Data/lv_lvtb-ud-train.conllu'
+        czech_train=os.getcwd()+'/Data/cs_pdt-ud-train.conllu'
         
-        sentences_marathi_train=preprocess_2(pyconll.load_from_file(marathi_train))
-        sentences_marathi_test=preprocess_2(pyconll.load_from_file(marathi_test))
-        sentences_marathi_dev=preprocess_2(pyconll.load_from_file(marathi_dev))
-        sentences_hindi_train=preprocess_2(pyconll.load_from_file(hindi_train))
-        sentences_magahi_train=preprocess_2(pyconll.load_from_file(bhojpuri_train))
-        sentences_bhojpuri_train=preprocess_2(pyconll.load_from_file(magahi_train))
-        sentences_sanskrit_train=preprocess_2(pyconll.load_from_file(sanskrit_train))
-        sentences_english_train=preprocess_2(pyconll.load_from_file(english_train))
-        sentences_german_train=preprocess_2(pyconll.load_from_file(german_train))
-        sentences_dutch_train=preprocess_2(pyconll.load_from_file(dutch_train))
-        sentences_danish_train=preprocess_2(pyconll.load_from_file(danish_train))
-        
-        return sentences_sanskrit_train,sentences_marathi_train,sentences_marathi_test,sentences_marathi_dev,sentences_hindi_train,sentences_bhojpuri_train,sentences_magahi_train,sentences_english_train,sentences_german_train,sentences_dutch_train,sentences_danish_train
+        sentences_manx_train=preprocess_2(pyconll.load_from_file(manx_train))
+        sentences_manx_test=preprocess_2(pyconll.load_from_file(manx_test))
+        sentences_manx_dev=preprocess_2(pyconll.load_from_file(manx_dev))
+        sentences_irish_train=preprocess_2(pyconll.load_from_file(irish_train))
+        sentences_scottish_gaelic_train=preprocess_2(pyconll.load_from_file(scottish_gaelic_train))
+        sentences_serbian_train=preprocess_2(pyconll.load_from_file(serbian_train))
+        sentences_slovak_train=preprocess_2(pyconll.load_from_file(slovak_train))
+        sentences_slovenian_train=preprocess_2(pyconll.load_from_file(slovenian_train))
+        sentences_lithuanian_train=preprocess_2(pyconll.load_from_file(lithuanian_train))
+        sentences_latvian_train=preprocess_2(pyconll.load_from_file(latvian_train))
+        sentences_czech_train=preprocess_2(pyconll.load_from_file(czech_train))
+
+        return sentences_manx_train,sentences_manx_test,sentences_manx_dev,sentences_irish_train,sentences_scottish_gaelic_train,sentences_serbian_train,sentences_slovak_train,sentences_slovenian_train,sentences_lithuanian_train,sentences_latvian_train,sentences_czech_train
 
 
 def get_sentences(sentences_train,sentences_test,tags,max_len):
@@ -63,13 +63,13 @@ def get_tokens(sentences):
         s.add('START')
         s.add('END')
         s=list(s)
-        dict={}
+        dict2={}
         dict1={}
         for i in range(len(s)):
-                dict[s[i]]=i
+                dict2[s[i]]=i
                 dict1[i]=s[i]
         
-        return dict,dict1,len(s)
+        return dict2,dict1,len(s)
         
 def get_characters(sentences):
         s=set()
